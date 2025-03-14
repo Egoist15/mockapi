@@ -35,7 +35,7 @@ public class EligibilityService {
 
     public EligibilityResponse eligibilityCheck(EligibilityRequest request) {
         if (repository.findByRequestId(request.getRequestId()).isPresent()) {
-            return prepareResponse(request, false, "DUPLICATE_REQUEST_ID");
+            throw new IllegalArgumentException("Duplicate Request ID: " + request.getRequestId());
         }
 
         saveInitialRequest(request);
@@ -46,10 +46,10 @@ public class EligibilityService {
         } else if ("ADDRESS_CHECK".equals(request.getEligibilityCheck())) {
             response = isUSAAddress(request);
         } else {
-            response = prepareResponse(request, false, "INVALID_CHECK_TYPE");
+            response = prepareResponse(false, "INVALID_CHECK_TYPE", "INVALID_CHECK_TYPE");
         }
 
-        repository.updateEligibility(request.getRequestId(), response.getEligible(), response.getErrorCode());
+        repository.updateEligibility(request.getRequestId(), response.isEligible(), response.getErrorCode());
         return response;
     }
 
@@ -84,17 +84,24 @@ public class EligibilityService {
         LocalDate dateOfBirth = request.getDateOfBirth();
         boolean eligible = dateOfBirth != null && Period.between(dateOfBirth, LocalDate.now()).getYears() >= 18;
         String errorCode = eligible ? null : "AGE_ERROR";
-        return prepareResponse(request, eligible, errorCode);
+        String errorDescription = eligible ? "VALID AGE" : "INVALID AGE";
+        return prepareResponse(eligible, errorCode, errorDescription);
     }
 
     private EligibilityResponse isUSAAddress(EligibilityRequest request) {
         try {
             boolean isValidAddress = validateAddressWithThirdParty(request);
-            return prepareResponse(request, isValidAddress, isValidAddress ? null : "ADDRESS_ERROR");
+
+            if (isValidAddress) {
+                return prepareResponse(true, null, "Valid USA Address");
+            } else {
+                return prepareResponse(false, "ADDRESS_INVALID", "Invalid USA Address");
+            }
         } catch (Exception e) {
-            return prepareResponse(request, false, "ADDRESS_API_ERROR");
+            return prepareResponse(false, "ADDRESS_API_ERROR", "Address validation service is unavailable");
         }
     }
+
 
     private boolean validateAddressWithThirdParty(EligibilityRequest request) {
         if (request.getAddress() == null) {
@@ -121,14 +128,11 @@ public class EligibilityService {
         }
     }
 
-    private EligibilityResponse prepareResponse(EligibilityRequest request, boolean eligible, String errorCode) {
+    private EligibilityResponse prepareResponse(boolean eligible, String errorCode, String errorDescription) {
         return new EligibilityResponse(
-                request.getClientId(),
-                request.getRequestId(),
-                request.getProductId(),
-                request.getEligibilityCheck(),
                 eligible,
-                errorCode
+                errorCode,
+                errorDescription
         );
     }
 }

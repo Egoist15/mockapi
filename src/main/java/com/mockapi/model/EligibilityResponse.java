@@ -2,60 +2,22 @@ package com.mockapi.model;
 
 public class EligibilityResponse {
 
-    private String clientId;
-    private String requestId;
-    private String productId;
-    private String eligibilityCheck;
-    private Boolean eligible;
+
+    private boolean eligible;
     private String errorCode;
+    private String errorDescription;
 
-
-    public EligibilityResponse(String clientId, String requestId, String productId, String eligibilityCheck, Boolean eligible, String errorCode) {
-        this.clientId = clientId;
-        this.requestId = requestId;
-        this.productId = productId;
-        this.eligibilityCheck = eligibilityCheck;
+    public EligibilityResponse(boolean eligible, String errorCode, String errorDescription) {
         this.eligible = eligible;
         this.errorCode = errorCode;
+        this.errorDescription = errorDescription;
     }
 
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
-    }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
-        this.productId = productId;
-    }
-
-    public String getEligibilityCheck() {
-        return eligibilityCheck;
-    }
-
-    public void setEligibilityCheck(String eligibilityCheck) {
-        this.eligibilityCheck = eligibilityCheck;
-    }
-
-    public Boolean getEligible() {
+    public boolean isEligible() {
         return eligible;
     }
 
-    public void setEligible(Boolean eligible) {
+    public void setEligible(boolean eligible) {
         this.eligible = eligible;
     }
 
@@ -65,5 +27,13 @@ public class EligibilityResponse {
 
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
+    }
+
+    public String getErrorDescription() {
+        return errorDescription;
+    }
+
+    public void setErrorDescription(String errorDescription) {
+        this.errorDescription = errorDescription;
     }
 }

@@ -35,7 +35,7 @@ public class EligibilityService {
 
     public EligibilityResponse eligibilityCheck(EligibilityRequest request) {
         if (repository.findByRequestId(request.getRequestId()).isPresent()) {
-            throw new IllegalArgumentException("Duplicate Request ID: " + request.getRequestId());
+            return new EligibilityResponse(false, "DUPLICATE_REQUEST_ID","REQUEST_ID_ALREADY_EXISTS");
         }
 
         saveInitialRequest(request);

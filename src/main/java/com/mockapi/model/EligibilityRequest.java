@@ -11,6 +11,17 @@ public class EligibilityRequest {
     private LocalDate dateOfBirth;
     private Address address;
 
+    public EligibilityRequest() {
+    }
+
+    public EligibilityRequest(String clientId, String requestId, String productId, String eligibilityCheck, LocalDate dateOfBirth, Address address) {
+        this.clientId = clientId;
+        this.requestId = requestId;
+        this.productId = productId;
+        this.eligibilityCheck = eligibilityCheck;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+    }
 
     public String getClientId() {
         return clientId;

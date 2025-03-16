@@ -15,20 +15,20 @@ public class EligibilityRequestRepository {
     private EntityManager entityManager;
 
     public Optional<EligibilityRequestEntity> findByRequestId(String requestId) {
-        try {
-            EligibilityRequestEntity entity = entityManager.createQuery(
-                    "SELECT e FROM EligibilityRequestEntity e WHERE e.requestId = :requestId",
-                    EligibilityRequestEntity.class
-            ).setParameter("requestId", requestId).getSingleResult();
-            return Optional.of(entity);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+        return entityManager.createQuery(
+                        "SELECT e FROM EligibilityRequestEntity e WHERE e.requestId = :requestId",
+                        EligibilityRequestEntity.class
+                )
+                .setParameter("requestId", requestId)
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 
     @Transactional
     public void save(EligibilityRequestEntity entity) {
         entityManager.persist(entity);
+        entityManager.flush();
     }
 
     @Transactional

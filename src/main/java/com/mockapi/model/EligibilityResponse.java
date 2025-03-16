@@ -7,6 +7,7 @@ public class EligibilityResponse {
     private String errorCode;
     private String errorDescription;
 
+
     public EligibilityResponse(boolean eligible, String errorCode, String errorDescription) {
         this.eligible = eligible;
         this.errorCode = errorCode;

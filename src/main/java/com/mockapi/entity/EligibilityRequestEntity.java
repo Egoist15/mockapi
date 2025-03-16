@@ -37,6 +37,12 @@ public class EligibilityRequestEntity {
     @Column(nullable = true)
     private String errorCode;
 
+
+    public EligibilityRequestEntity() {
+
+    }
+
+
     public EligibilityRequestEntity(String clientId, String requestId, String productId, String eligibilityCheck, LocalDate dateOfBirth, AddressEntity address) {
         this.clientId = clientId;
         this.requestId = requestId;
